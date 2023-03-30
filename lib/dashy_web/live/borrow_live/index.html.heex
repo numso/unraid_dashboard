@@ -1,0 +1,44 @@
+<.header>
+  Listing Borrows
+  <:actions>
+    <.link patch={~p"/borrows/new"}>
+      <.button>New Borrow</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table
+  id="borrows"
+  rows={@streams.borrows}
+  row_click={fn {_id, borrow} -> JS.navigate(~p"/borrows/#{borrow}") end}
+>
+  <:col :let={{_id, borrow}} label="Name"><%= borrow.name %></:col>
+  <:col :let={{_id, borrow}} label="What"><%= borrow.what %></:col>
+  <:col :let={{_id, borrow}} label="When"><%= borrow.when %></:col>
+  <:col :let={{_id, borrow}} label="Returned"><%= borrow.returned %></:col>
+  <:action :let={{_id, borrow}}>
+    <div class="sr-only">
+      <.link navigate={~p"/borrows/#{borrow}"}>Show</.link>
+    </div>
+    <.link patch={~p"/borrows/#{borrow}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={{id, borrow}}>
+    <.link
+      phx-click={JS.push("delete", value: %{id: borrow.id}) |> hide("##{id}")}
+      data-confirm="Are you sure?"
+    >
+      Delete
+    </.link>
+  </:action>
+</.table>
+
+<.modal :if={@live_action in [:new, :edit]} id="borrow-modal" show on_cancel={JS.patch(~p"/borrows")}>
+  <.live_component
+    module={DashyWeb.BorrowLive.FormComponent}
+    id={@borrow.id || :new}
+    title={@page_title}
+    action={@live_action}
+    borrow={@borrow}
+    patch={~p"/borrows"}
+  />
+</.modal>

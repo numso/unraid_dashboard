@@ -18,6 +18,13 @@ defmodule DashyWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :home
+
+    live "/borrows", BorrowLive.Index, :index
+    live "/borrows/new", BorrowLive.Index, :new
+    live "/borrows/:id/edit", BorrowLive.Index, :edit
+
+    live "/borrows/:id", BorrowLive.Show, :show
+    live "/borrows/:id/show/edit", BorrowLive.Show, :edit
   end
 
   # Other scopes may use custom stacks.

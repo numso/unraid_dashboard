@@ -1,0 +1,29 @@
+<.header>
+  Borrow <%= @borrow.id %>
+  <:subtitle>This is a borrow record from your database.</:subtitle>
+  <:actions>
+    <.link patch={~p"/borrows/#{@borrow}/show/edit"} phx-click={JS.push_focus()}>
+      <.button>Edit borrow</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="Name"><%= @borrow.name %></:item>
+  <:item title="What"><%= @borrow.what %></:item>
+  <:item title="When"><%= @borrow.when %></:item>
+  <:item title="Returned"><%= @borrow.returned %></:item>
+</.list>
+
+<.back navigate={~p"/borrows"}>Back to borrows</.back>
+
+<.modal :if={@live_action == :edit} id="borrow-modal" show on_cancel={JS.patch(~p"/borrows/#{@borrow}")}>
+  <.live_component
+    module={DashyWeb.BorrowLive.FormComponent}
+    id={@borrow.id}
+    title={@page_title}
+    action={@live_action}
+    borrow={@borrow}
+    patch={~p"/borrows/#{@borrow}"}
+  />
+</.modal>
