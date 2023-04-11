@@ -1,0 +1,28 @@
+<div>
+  <p class="p-4">Updated at: <%= @created_at %></p>
+  <div class="flex flex-wrap gap-4 p-4">
+    <.gauge
+      label="Authorized Resolvers"
+      value={@data["authorized_resolvers"]}
+      max={@data["total_resolvers"]}
+    />
+    <.gauge
+      label="Implemented Resolvers"
+      value={@data["implemented_resolvers"]}
+      max={@data["total_resolvers"]}
+    />
+    <.gauge
+      label="Tests Passing in NodeJS"
+      value={@data["tests_passing"]}
+      max={@data["tests_total"]}
+    />
+    <.gauge_base label="Elixir Coverage" value={@data["elixir_coverage"] / 100} />
+    <.gauge_base label="Node Coverage" value={node_cov(@data)}>
+      <div class="flex justify-around">
+        <div>B <%= fmt(node_cov(@data, "branches")) %></div>
+        <div>F <%= fmt(node_cov(@data, "functions")) %></div>
+        <div>L <%= fmt(node_cov(@data, "lines")) %></div>
+      </div>
+    </.gauge_base>
+  </div>
+</div>

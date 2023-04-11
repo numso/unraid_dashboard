@@ -19,6 +19,8 @@ defmodule DashyWeb.Router do
 
     get "/", PageController, :home
 
+    live "/migration-dashboard", MigrationDashboardLive.Index, :index
+
     live "/borrows", BorrowLive.Index, :index
     live "/borrows/new", BorrowLive.Index, :new
     live "/borrows/:id/edit", BorrowLive.Index, :edit
