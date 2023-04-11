@@ -8,8 +8,7 @@
 import Config
 
 config :dashy,
-  ecto_repos: [Dashy.Repo],
-  build_token: System.get_env("BUILD_TOKEN")
+  ecto_repos: [Dashy.Repo]
 
 # Configures the endpoint
 config :dashy, DashyWeb.Endpoint,

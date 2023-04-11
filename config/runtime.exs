@@ -20,6 +20,9 @@ if System.get_env("PHX_SERVER") do
   config :dashy, DashyWeb.Endpoint, server: true
 end
 
+config :dashy,
+  build_token: System.get_env("BUILD_TOKEN")
+
 if config_env() == :prod do
   database_url =
     System.get_env("DATABASE_URL") ||
