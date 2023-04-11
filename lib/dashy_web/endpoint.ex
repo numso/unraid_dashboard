@@ -8,7 +8,8 @@ defmodule DashyWeb.Endpoint do
     store: :cookie,
     key: "_dashy_key",
     signing_salt: "F87K7KIz",
-    same_site: "None"
+    same_site: "None",
+    secure: true
   ]
 
   socket "/live", Phoenix.LiveView.Socket, websocket: [connect_info: [session: @session_options]]
