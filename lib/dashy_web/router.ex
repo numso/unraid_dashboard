@@ -8,6 +8,12 @@ defmodule DashyWeb.Router do
     plug :put_root_layout, {DashyWeb.Layouts, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug :fix_x_frame_options
+  end
+
+  def fix_x_frame_options(conn, _) do
+    conn
+    |> Plug.Conn.delete_resp_header("x-frame-options")
   end
 
   pipeline :api do
