@@ -1,27 +1,38 @@
 <div>
-  <p class="p-4">Updated at: <%= @created_at %></p>
+  <div class="p-4 flex justify-between">
+    <div>Created at: <%= @item["createdAt"] %></div>
+    <form phx-change="select_option">
+      <.input
+        type="select"
+        name="picker"
+        id="picker"
+        options={options(@items)}
+        value={@item["id"]}
+      />
+    </form>
+  </div>
   <div class="flex flex-wrap gap-4 p-4">
     <.gauge
       label="Authorized Resolvers"
-      value={@data["authorized_resolvers"]}
-      max={@data["total_resolvers"]}
+      value={@item["authorized_resolvers"]}
+      max={@item["total_resolvers"]}
     />
     <.gauge
       label="Implemented Resolvers"
-      value={@data["implemented_resolvers"]}
-      max={@data["total_resolvers"]}
+      value={@item["implemented_resolvers"]}
+      max={@item["total_resolvers"]}
     />
     <.gauge
       label="Tests Passing in NodeJS"
-      value={@data["tests_passing"]}
-      max={@data["tests_total"]}
+      value={@item["tests_passing"]}
+      max={@item["tests_total"]}
     />
-    <.gauge_base label="Elixir Coverage" value={@data["elixir_coverage"] / 100} />
-    <.gauge_base label="Node Coverage" value={node_cov(@data)}>
+    <.gauge_base label="Elixir Coverage" value={@item["elixir_coverage"] / 100} />
+    <.gauge_base label="Node Coverage" value={node_cov(@item)}>
       <div class="flex justify-around">
-        <div>B <%= fmt(node_cov(@data, "branches")) %></div>
-        <div>F <%= fmt(node_cov(@data, "functions")) %></div>
-        <div>L <%= fmt(node_cov(@data, "lines")) %></div>
+        <div>B <%= fmt(node_cov(@item, "branches")) %></div>
+        <div>F <%= fmt(node_cov(@item, "functions")) %></div>
+        <div>L <%= fmt(node_cov(@item, "lines")) %></div>
       </div>
     </.gauge_base>
   </div>

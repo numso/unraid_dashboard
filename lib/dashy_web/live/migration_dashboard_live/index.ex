@@ -3,15 +3,21 @@ defmodule DashyWeb.MigrationDashboardLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    resp = fetch_data()
+    [item | _] = items = fetch_data()
 
     {
       :ok,
       socket
-      |> assign(:data, resp["data"])
-      |> assign(:created_at, resp["createdAt"]),
+      |> assign(:items, items)
+      |> assign(:item, item),
       layout: false
     }
+  end
+
+  @impl true
+  def handle_event("select_option", %{"picker" => id}, %{assigns: %{items: items}} = socket) do
+    i = Enum.find_index(items, &(&1["id"] == id))
+    {:noreply, socket |> assign(:item, Enum.at(items, i))}
   end
 
   attr :label, :string, required: true
@@ -69,6 +75,11 @@ defmodule DashyWeb.MigrationDashboardLive.Index do
     """
   end
 
+  defp options(items) do
+    [{label, id} | rest] = Enum.map(items, &{&1["createdAt"], &1["id"]})
+    [{"Latest: " <> label, id} | rest]
+  end
+
   defp fmt(value) do
     "#{floor(value * 1000) / 10}%"
   end
@@ -106,6 +117,7 @@ defmodule DashyWeb.MigrationDashboardLive.Index do
                 documentConnection(args: {limit: 100}) {
                   edges {
                     node {
+                      id
                       createdAt
                       data
                     }
@@ -126,9 +138,12 @@ defmodule DashyWeb.MigrationDashboardLive.Index do
     body
     |> Jason.decode!()
     |> get_in(["data", "app", "dataset", "documentConnection", "edges"])
-    |> Enum.map(& &1["node"])
+    |> Enum.map(fn %{"node" => node} ->
+      node["data"]
+      |> Map.put("createdAt", node["createdAt"])
+      |> Map.put("id", node["id"])
+    end)
     |> Enum.sort_by(&DateTime.from_iso8601(&1["createdAt"]))
     |> Enum.reverse()
-    |> hd()
   end
 end
